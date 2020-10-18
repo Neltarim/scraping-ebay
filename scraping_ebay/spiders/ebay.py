@@ -5,8 +5,8 @@ import scrapy
 class EbaySpider(scrapy.Spider):
 	
 	name = "ebay"
-	allowed_domains = ["ebay.com"]
-	start_urls = ["https://www.ebay.com"]
+	allowed_domains = ["ebay.fr"]
+	start_urls = ["https://www.ebay.fr"]
 
 	# Allow a custom parameter (-a flag in the scrapy command)
 	def __init__(self, search="nintendo switch console"):
@@ -17,7 +17,7 @@ class EbaySpider(scrapy.Spider):
 		trksid = response.css("input[type='hidden'][name='_trksid']").xpath("@value").extract()[0]       
 		
 		# Build the url and start the requests
-		yield scrapy.Request("http://www.ebay.com/sch/i.html?_from=R40&_trksid=" + trksid +
+		yield scrapy.Request("http://www.ebay.fr/sch/i.html?_from=R40&_trksid=" + trksid +
 							 "&_nkw=" + self.search_string.replace(' ','+') + "&_ipg=200", 
 							 callback=self.parse_link)
 
@@ -40,6 +40,7 @@ class EbaySpider(scrapy.Spider):
 			# If this get a None result
 			if name == None:
 				name = "ERROR"
+
 
 			price = product.xpath('.//*[@class="s-item__price"]/text()').extract_first()
 			status = product.xpath('.//*[@class="SECONDARY_INFO"]/text()').extract_first()
@@ -93,7 +94,3 @@ class EbaySpider(scrapy.Spider):
 		data['UPC'] = response.xpath('//h2[@itemprop="gtin13"]/text()').extract_first()
 
 		yield data
-
-
-
-
